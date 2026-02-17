@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 15% 6%;
+    --foreground: 160 100% 85%;
+
+    --card: 210 15% 9%;
+    --card-foreground: 160 100% 85%;
+
+    --popover: 210 15% 9%;
+    --popover-foreground: 160 100% 85%;
+
+    --primary: 160 100% 50%;
+    --primary-foreground: 210 15% 6%;
+
+    --secondary: 210 10% 14%;
+    --secondary-foreground: 160 40% 70%;
+
+    --muted: 210 10% 14%;
+    --muted-foreground: 160 15% 45%;
+
+    --accent: 160 100% 42%;
+    --accent-foreground: 210 15% 6%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --warning: 45 93% 47%;
+    --warning-foreground: 45 93% 10%;
+
+    --border: 160 30% 18%;
+    --input: 160 20% 15%;
+    --ring: 160 100% 50%;
+
+    --radius: 0.25rem;
+
+    --sidebar-background: 210 15% 7%;
+    --sidebar-foreground: 160 100% 85%;
+    --sidebar-primary: 160 100% 50%;
+    --sidebar-primary-foreground: 210 15% 6%;
+    --sidebar-accent: 160 30% 12%;
+    --sidebar-accent-foreground: 160 100% 85%;
+    --sidebar-border: 160 30% 18%;
+    --sidebar-ring: 160 100% 50%;
+
+    --hud-glow: 160 100% 50%;
+    --hud-grid: 160 30% 12%;
+    --hud-scanline: 160 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-mono antialiased;
+    background-image:
+      linear-gradient(hsl(160 30% 12% / 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(160 30% 12% / 0.3) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: center center;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: hsl(var(--primary));
+  }
+}
+
+@layer utilities {
+  .hud-border {
+    border: 1px solid hsl(var(--border));
+    box-shadow:
+      0 0 8px hsl(160 100% 50% / 0.08),
+      inset 0 0 8px hsl(160 100% 50% / 0.04);
+  }
+
+  .hud-glow {
+    box-shadow:
+      0 0 12px hsl(160 100% 50% / 0.15),
+      0 0 40px hsl(160 100% 50% / 0.05);
+  }
+
+  .hud-text-glow {
+    text-shadow: 0 0 8px hsl(160 100% 50% / 0.4);
+  }
+
+  .hud-corner {
+    position: relative;
+  }
+  .hud-corner::before,
+  .hud-corner::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: hsl(var(--primary));
+  }
+  .hud-corner::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid;
+    border-left: 2px solid;
+  }
+  .hud-corner::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid;
+    border-right: 2px solid;
+  }
+
+  .scanline {
+    position: relative;
+    overflow: hidden;
+  }
+  .scanline::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(160 100% 50% / 0.02) 2px,
+      hsl(160 100% 50% / 0.02) 4px
+    );
+    pointer-events: none;
+  }
+}

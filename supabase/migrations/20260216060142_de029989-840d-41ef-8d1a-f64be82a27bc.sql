@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN notify_advance_minutes INTEGER NOT NULL DEFAULT 15;

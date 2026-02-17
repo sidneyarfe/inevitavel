@@ -1,0 +1,1 @@
+ALTER TABLE public.habits ADD COLUMN anchor_position text NOT NULL DEFAULT 'after';

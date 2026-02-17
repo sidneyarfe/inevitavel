@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN checklist_template jsonb NOT NULL DEFAULT '[]'::jsonb;
