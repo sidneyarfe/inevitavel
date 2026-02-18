@@ -275,7 +275,7 @@ const Briefing = () => {
           >
             <Sun className="h-3.5 w-3.5 text-warning shrink-0" />
             <span className="font-mono text-[10px] text-warning">
-              Modo diurno — edite a lista, mas só marque à noite (20h–05h).
+              Modo diurno — preparação disponível.
             </span>
           </motion.div>
         )}
@@ -337,17 +337,17 @@ const Briefing = () => {
                     <Checkbox
                       checked={item.checked}
                       onCheckedChange={() => toggleItem(index)}
-                      disabled={!isBriefingTime && !item.checked}
-                      className="h-4.5 w-4.5 shrink-0"
+                      className="h-4.5 w-4.5 shrink-0 cursor-pointer"
                     />
                     <motion.span
+                      onClick={() => toggleItem(index)}
                       animate={
                         justCheckedIndex === index
                           ? { scale: [1, 1.03, 1], color: "hsl(160 100% 50%)" }
                           : {}
                       }
                       transition={{ duration: 0.4 }}
-                      className={`font-mono text-[11px] md:text-xs transition-all duration-300 flex-1 leading-tight ${item.checked
+                      className={`font-mono text-[11px] md:text-xs transition-all duration-300 flex-1 leading-tight cursor-pointer select-none ${item.checked
                         ? "text-primary/70 line-through"
                         : "text-foreground"
                         }`}
