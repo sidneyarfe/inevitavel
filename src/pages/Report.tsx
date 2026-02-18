@@ -319,7 +319,7 @@ const Report = () => {
             <Target className="h-3 w-3 text-accent" />
             <span className="font-mono text-lg text-accent">{stats.full}</span>
           </div>
-          <span className="block font-mono text-[8px] text-muted-foreground uppercase tracking-wider mt-0.5">Prova Real</span>
+          <span className="block font-mono text-[8px] text-muted-foreground uppercase tracking-wider mt-0.5">Ação Completa</span>
         </div>
       </div>
 
@@ -513,7 +513,7 @@ const Report = () => {
                   </div>
                   <div className="flex items-center gap-1">
                     <Target className="h-2.5 w-2.5 text-accent" />
-                    <span className="font-mono text-[8px] text-muted-foreground">Prova Real</span>
+                    <span className="font-mono text-[8px] text-muted-foreground">Ação Completa</span>
                   </div>
                 </div>
               </div>

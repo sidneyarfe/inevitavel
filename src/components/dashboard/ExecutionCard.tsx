@@ -175,7 +175,7 @@ const ExecutionCard = ({
                   "font-mono text-[9px] uppercase tracking-wider ml-auto flex-shrink-0",
                   exec.completion_type === "full" ? "text-accent/70" : "text-muted-foreground/50"
                 )}>
-                  {exec.completion_type === "full" ? "PROVA REAL" : "MICRO-AÇÃO"}
+                  {exec.completion_type === "full" ? "AÇÃO COMPLETA" : "MICRO-AÇÃO"}
                 </span>
               )}
               {exec.status === "failed" && (
@@ -307,7 +307,7 @@ const ExecutionCard = ({
             >
               <div className="border border-accent/30 bg-accent/5 rounded-sm p-3 text-center">
                 <p className="font-mono text-[11px] text-accent mb-3">
-                  Micro-ação concluída! Deseja registrar a Prova Real agora?
+                  Micro-ação concluída! Deseja registrar a Ação Completa agora?
                 </p>
                 <div className="flex gap-2 justify-center">
                   <Button
@@ -315,7 +315,7 @@ const ExecutionCard = ({
                     size="sm"
                     className="bg-accent text-accent-foreground hover:bg-accent/80 font-mono text-[10px] uppercase tracking-wider h-8"
                   >
-                    <Zap className="mr-1 h-3 w-3" /> Prova Real ({Math.floor((exec.full_duration ?? 0) / 60)} min)
+                    <Zap className="mr-1 h-3 w-3" /> Ação Completa ({Math.floor((exec.full_duration ?? 0) / 60)} min)
                   </Button>
                   <Button
                     onClick={(e) => { e.stopPropagation(); onSkipFull(exec.id); }}

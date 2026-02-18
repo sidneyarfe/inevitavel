@@ -276,7 +276,7 @@ const HabitWizard = ({ onComplete, onCancel, initialData, userId }: HabitWizardP
                           {/* Full duration */}
                           <div>
                             <label className="font-mono text-[9px] text-muted-foreground uppercase tracking-wider mb-2 flex items-center justify-center gap-1">
-                              <Expand className="h-3 w-3" /> Prova Real / Ação completa (opcional)
+                              <Expand className="h-3 w-3" /> Ação Completa (opcional)
                             </label>
                             <div className="flex items-center justify-center gap-2">
                               <Input type="number" min="1" value={fullDurationInput} onChange={(e) => handleFullDurationChange(e.target.value)} placeholder="Ex: 30" className="border-border bg-secondary/50 text-foreground font-mono text-xs text-center w-20 h-8" />
@@ -306,7 +306,7 @@ const HabitWizard = ({ onComplete, onCancel, initialData, userId }: HabitWizardP
 
             {/* Action button */}
             <Button onClick={next} disabled={!canProceed} className="w-full mt-8 bg-primary text-primary-foreground hover:bg-primary/80 font-mono uppercase tracking-[0.15em] text-xs h-12 hud-glow disabled:opacity-30">
-              {isLast ? <><Check className="mr-2 h-4 w-4" /> Instalar Engrenagem</> : <><ArrowRight className="mr-2 h-4 w-4" /> Próximo</>}
+              {isLast ? <><Check className="mr-2 h-4 w-4" /> Instalar Hábito</> : <><ArrowRight className="mr-2 h-4 w-4" /> Próximo</>}
             </Button>
           </motion.div>
         </AnimatePresence>
