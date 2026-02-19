@@ -18,6 +18,8 @@ import DesktopSidePanel from "@/components/dashboard/DesktopSidePanel";
 import { groupExecutions, PeriodHeader, getCurrentPeriod, getPeriodState } from "@/components/dashboard/ExecutionGroup";
 import ExecutionCard from "@/components/dashboard/ExecutionCard";
 import Onboarding from "@/components/Onboarding";
+import { PullToRefresh } from "@/components/PullToRefresh";
+import { RefreshCw } from "lucide-react";
 import type { Execution } from "@/types/execution";
 
 type TimerPhase = "idle" | "micro" | "prompt" | "full";
@@ -211,10 +213,10 @@ const Dashboard = () => {
 
     if (overdue.length > 0) {
       const auditedKey = `audit_${now.toISOString().split("T")[0]}`;
-      const alreadyAudited = JSON.parse(sessionStorage.getItem(auditedKey) || "[]") as string[];
+      const alreadyAudited = JSON.parse(localStorage.getItem(auditedKey) || "[]") as string[];
       const unaudited = overdue.filter((e) => !alreadyAudited.includes(e.id));
 
-      if (unaudited.length > 0) {
+      if (unaudited.length > 0 && !showAudit) {
         setOverdueExecutions(unaudited.map((e) => ({
           id: e.id,
           habit_name: e.habit_name,
@@ -393,17 +395,19 @@ const Dashboard = () => {
 
   const handleAuditDismiss = () => {
     const today = new Date().toISOString().split("T")[0];
+
     const auditedKey = `audit_${today}`;
-    const alreadyAudited = JSON.parse(sessionStorage.getItem(auditedKey) || "[]") as string[];
+    const alreadyAudited = JSON.parse(localStorage.getItem(auditedKey) || "[]") as string[];
     const newAudited = [...alreadyAudited, ...overdueExecutions.map((e) => e.id)];
-    sessionStorage.setItem(auditedKey, JSON.stringify(newAudited));
+    localStorage.setItem(auditedKey, JSON.stringify(newAudited));
     setShowAudit(false);
     setOverdueExecutions([]);
   };
 
   const handleExecuteNow = (executionId: string) => {
     handleStart(executionId);
-    setOverdueExecutions((prev) => prev.filter((e) => e.id !== executionId));
+    // Do not remove from overdueExecutions here; let the status change and effect handle it naturally
+    // setOverdueExecutions((prev) => prev.filter((e) => e.id !== executionId));
   };
 
   const mobileSlot = typeof document !== 'undefined' ? document.getElementById('mobile-identity-slot') : null;
@@ -433,92 +437,99 @@ const Dashboard = () => {
         />
       )}
 
-      {user && <ContextualGreeting userId={user.id} pendingCount={pendingCount} />}
-
-      {/* Mobile: streak + progress inline */}
-      <div className="lg:hidden">
-        <div className="mb-4 px-1">
-          <StreakBadge streak={streak} loading={streakLoading} />
+      <PullToRefresh onRefresh={loadTodayExecutions}>
+        <div className="flex justify-between items-start mb-4">
+          {user && <ContextualGreeting userId={user.id} pendingCount={pendingCount} />}
+          <Button onClick={loadTodayExecutions} variant="ghost" size="icon" className="h-8 w-8 text-primary/50 hover:text-primary">
+            <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
+          </Button>
         </div>
-        <ProgressBarHud executed={executedCount} total={executions.length} />
-      </div>
 
-      {/* Desktop 2-column layout */}
-      <div className="lg:grid lg:grid-cols-[1fr_280px] lg:gap-8">
-        {/* Main column */}
-        <div>
-          {groupExecutions(executions).map((group) => {
-            const groupExecuted = group.executions.filter((e) => e.status === "executed").length;
-            const currentPeriod = getCurrentPeriod();
-            const periodState = getPeriodState(group.period, currentPeriod);
-            const isFuture = periodState === "future";
-            const isPast = periodState === "past";
-            const groupAllDone = group.executions.every((e) => e.status === "executed");
-            const groupHasActiveTimer = group.executions.some((e) => activeTimer === e.id);
-            const dimmed = (isFuture || (isPast && groupAllDone)) && !groupHasActiveTimer;
-            return (
-              <div key={group.period} className={cn("transition-opacity duration-500", dimmed && "opacity-30")}>
-                <PeriodHeader
-                  period={group.period}
-                  executedCount={groupExecuted}
-                  totalCount={group.executions.length}
-                  periodState={periodState}
-                />
-                <div className="space-y-2">
-                  <AnimatePresence mode="popLayout">
-                    {group.executions.map((exec, i) => {
-                      const isActive = activeTimer === exec.id;
-                      const isFlashing = flashId === exec.id;
-                      const isOverdue = !isFuture && exec.status === "pending" && !!exec.preferred_time && (() => {
-                        const now = new Date();
-                        const [h, m] = exec.preferred_time!.split(":").map(Number);
-                        return now.getHours() * 60 + now.getMinutes() > h * 60 + m;
-                      })();
-                      return (
-                        <ExecutionCard
-                          key={exec.id}
-                          exec={exec}
-                          index={i}
-                          isActive={isActive}
-                          isFlashing={isFlashing}
-                          isOverdue={isOverdue}
-                          isFuture={isFuture}
-                          isExpanded={expandedId === exec.id}
-                          hasMounted={hasMounted}
-                          activeTimer={activeTimer}
-                          timeLeft={timeLeft}
-                          timerDuration={timerDuration}
-                          timerPhase={isActive ? timerPhase : "idle"}
-                          isPaused={isActive ? isPaused : false}
-                          formatTime={formatTime}
-                          onStart={handleStart}
-                          onComplete={handleComplete}
-                          onUndo={handleUndo}
-                          onToggleExpand={(id) => setExpandedId(expandedId === id ? null : id)}
-                          onPause={handlePause}
-                          onResume={handleResume}
-                          onStartFull={handleStartFull}
-                          onSkipFull={handleSkipFull}
-                          onFail={handleFail}
-                        />
-                      );
-                    })}
-                  </AnimatePresence>
+        {/* Mobile: streak + progress inline */}
+        <div className="lg:hidden">
+          <div className="mb-4 px-1">
+            <StreakBadge streak={streak} loading={streakLoading} />
+          </div>
+          <ProgressBarHud executed={executedCount} total={executions.length} />
+        </div>
+
+        {/* Desktop 2-column layout */}
+        <div className="lg:grid lg:grid-cols-[1fr_280px] lg:gap-8">
+          {/* Main column */}
+          <div>
+            {groupExecutions(executions).map((group) => {
+              const groupExecuted = group.executions.filter((e) => e.status === "executed").length;
+              const currentPeriod = getCurrentPeriod();
+              const periodState = getPeriodState(group.period, currentPeriod);
+              const isFuture = periodState === "future";
+              const isPast = periodState === "past";
+              const groupAllDone = group.executions.every((e) => e.status === "executed");
+              const groupHasActiveTimer = group.executions.some((e) => activeTimer === e.id);
+              const dimmed = (isFuture || (isPast && groupAllDone)) && !groupHasActiveTimer;
+              return (
+                <div key={group.period} className={cn("transition-opacity duration-500", dimmed && "opacity-30")}>
+                  <PeriodHeader
+                    period={group.period}
+                    executedCount={groupExecuted}
+                    totalCount={group.executions.length}
+                    periodState={periodState}
+                  />
+                  <div className="space-y-2">
+                    <AnimatePresence mode="popLayout">
+                      {group.executions.map((exec, i) => {
+                        const isActive = activeTimer === exec.id;
+                        const isFlashing = flashId === exec.id;
+                        const isOverdue = !isFuture && exec.status === "pending" && !!exec.preferred_time && (() => {
+                          const now = new Date();
+                          const [h, m] = exec.preferred_time!.split(":").map(Number);
+                          return now.getHours() * 60 + now.getMinutes() > h * 60 + m;
+                        })();
+                        return (
+                          <ExecutionCard
+                            key={exec.id}
+                            exec={exec}
+                            index={i}
+                            isActive={isActive}
+                            isFlashing={isFlashing}
+                            isOverdue={isOverdue}
+                            isFuture={isFuture}
+                            isExpanded={expandedId === exec.id}
+                            hasMounted={hasMounted}
+                            activeTimer={activeTimer}
+                            timeLeft={timeLeft}
+                            timerDuration={timerDuration}
+                            timerPhase={isActive ? timerPhase : "idle"}
+                            isPaused={isActive ? isPaused : false}
+                            formatTime={formatTime}
+                            onStart={handleStart}
+                            onComplete={handleComplete}
+                            onUndo={handleUndo}
+                            onToggleExpand={(id) => setExpandedId(expandedId === id ? null : id)}
+                            onPause={handlePause}
+                            onResume={handleResume}
+                            onStartFull={handleStartFull}
+                            onSkipFull={handleSkipFull}
+                            onFail={handleFail}
+                          />
+                        );
+                      })}
+                    </AnimatePresence>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
 
-        {/* Desktop side panel */}
-        <DesktopSidePanel
-          streak={streak}
-          streakLoading={streakLoading}
-          executedCount={executedCount}
-          totalCount={executions.length}
-          cycleDay={cycleDay}
-        />
-      </div>
+          {/* Desktop side panel */}
+          <DesktopSidePanel
+            streak={streak}
+            streakLoading={streakLoading}
+            executedCount={executedCount}
+            totalCount={executions.length}
+            cycleDay={cycleDay}
+          />
+        </div>
+      </PullToRefresh>
     </div>
   );
 };

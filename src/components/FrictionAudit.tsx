@@ -160,11 +160,11 @@ const FrictionAudit = ({ overdue, onDismiss, onExecuteNow }: FrictionAuditProps)
           <DialogHeader>
             <DialogTitle className="font-display uppercase tracking-[0.2em] text-destructive text-sm flex items-center gap-2">
               <AlertTriangle className="h-4 w-4" />
-              Diagnóstico de Negociação
+              AUDITORIA DE PROCRASTINAÇÃO
             </DialogTitle>
           </DialogHeader>
           <p className="font-mono text-[10px] text-muted-foreground mt-1 uppercase tracking-wider">
-            {currentIndex + 1}/{overdue.length} · {phase === "reason" ? "Detectando atrito" : "Análise do sistema"}
+            {currentIndex + 1}/{overdue.length} · {phase === "reason" ? "Detectando padrões de procrastinação" : "Análise do sistema"}
           </p>
         </div>
 
@@ -183,7 +183,7 @@ const FrictionAudit = ({ overdue, onDismiss, onExecuteNow }: FrictionAuditProps)
                   <h3 className="font-display text-base text-primary">{current.habit_name}</h3>
                   <p className="font-mono text-xs text-muted-foreground mt-1">{current.micro_action}</p>
                   {current.preferred_time && (
-                    <p className="font-mono text-[10px] text-destructive/70 mt-1">
+                    <p className="font-mono text-[10px] text-destructive/70 mt-4">
                       Horário previsto: {current.preferred_time.slice(0, 5)}
                     </p>
                   )}
@@ -193,7 +193,7 @@ const FrictionAudit = ({ overdue, onDismiss, onExecuteNow }: FrictionAuditProps)
                 <Input
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  placeholder="Qual foi o argumento da sua negociação interna?"
+                  placeholder="Por que você não agiu? (Diga a verdade)."
                   className="border-border bg-secondary/50 text-foreground font-mono text-xs"
                   maxLength={200}
                 />
