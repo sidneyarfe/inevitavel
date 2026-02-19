@@ -454,7 +454,7 @@ const StepPillars: React.FC<{ onNext: () => void }> = ({ onNext }) => {
                 onClick={onNext}
                 className="w-full bg-primary text-primary-foreground hover:bg-primary/80 font-mono uppercase tracking-[0.15em] text-xs h-10 hud-glow"
               >
-                Instalar minha primeira engrenagem <ChevronRight className="ml-1 h-3 w-3" />
+                Instalar meu primeiro hábito <ChevronRight className="ml-1 h-3 w-3" />
               </Button>
             </motion.div>
           )}
@@ -591,17 +591,17 @@ const StepFirstTrail: React.FC<{ onNext: () => void; userId?: string }> = ({ onN
       <div className="w-full max-w-sm">
         <div className="text-center mb-6">
           <Target className="h-7 w-7 text-primary mx-auto mb-3" style={{ filter: "drop-shadow(0 0 8px hsl(var(--primary) / 0.3))" }} />
-          <h2 className="font-display text-lg text-primary mb-1">Sua Primeira Engrenagem</h2>
+          <h2 className="font-display text-lg text-primary mb-1">Seu Primeiro Hábito</h2>
           <p className="font-mono text-[11px] text-muted-foreground">
             {subStep === 0 && "Quando você acorda e dorme?"}
             {subStep === 1 && "Escolha uma rotina para ancorar hábitos."}
-            {subStep === 2 && "Instale sua primeira engrenagem neste trilho."}
+            {subStep === 2 && "Instale seu primeiro hábito neste trilho."}
           </p>
         </div>
 
         {/* Sub-step indicator */}
         <div className="flex items-center justify-center gap-2 mb-6">
-          {["Horários", "Trilho", "Engrenagem"].map((label, i) => (
+          {["Horários", "Trilho", "Hábito"].map((label, i) => (
             <div key={i} className="flex items-center gap-2">
               <div className={cn(
                 "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-mono transition-all",
@@ -742,7 +742,7 @@ const StepFirstTrail: React.FC<{ onNext: () => void; userId?: string }> = ({ onN
 
               <div className="border border-border bg-card/60 rounded-sm p-4 space-y-4">
                 <div className="space-y-2">
-                  <Label className="font-mono text-xs text-muted-foreground">Nome da engrenagem</Label>
+                  <Label className="font-mono text-xs text-muted-foreground">Nome do hábito</Label>
                   <Input
                     value={habitName}
                     onChange={(e) => setHabitName(e.target.value)}
@@ -766,7 +766,7 @@ const StepFirstTrail: React.FC<{ onNext: () => void; userId?: string }> = ({ onN
                 disabled={saving || !habitName.trim()}
                 className="w-full bg-primary text-primary-foreground hover:bg-primary/80 font-mono uppercase tracking-[0.15em] text-xs h-10 hud-glow"
               >
-                {saving ? "Instalando..." : "Instalar engrenagem"} <Plus className="ml-1 h-3 w-3" />
+                {saving ? "Instalando..." : "Instalar hábito"} <Plus className="ml-1 h-3 w-3" />
               </Button>
             </motion.div>
           )}
@@ -843,7 +843,7 @@ const StepActivation: React.FC<{ onNext: () => void; userId?: string }> = ({ onN
             className="space-y-4 mb-6"
           >
             <h2 className="font-display text-xl text-primary hud-text-glow">
-              Engrenagem Instalada
+              Hábito Instalado
             </h2>
 
             {/* Mini trail preview */}
@@ -876,7 +876,7 @@ const StepActivation: React.FC<{ onNext: () => void; userId?: string }> = ({ onN
             )}
 
             <p className="font-mono text-[11px] text-muted-foreground">
-              Sua primeira engrenagem está instalada.<br />
+              Seu primeiro hábito está instalado.<br />
               Agir agora é inevitável.
             </p>
           </motion.div>
